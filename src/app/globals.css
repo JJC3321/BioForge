@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-ink-100 text-ink-900 antialiased font-sans;
+  font-feature-settings: "ss01", "cv11";
+}
+
+h1,
+h2,
+h3 {
+  @apply font-serif tracking-tightish text-ink-900;
+}
+
+.card {
+  @apply bg-ink-50 rounded-2xl border border-ink-200/80;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition;
+}
+.btn-primary {
+  @apply btn bg-accent-600 text-ink-50 hover:bg-accent-500 disabled:opacity-50 disabled:cursor-not-allowed;
+}
+.btn-secondary {
+  @apply btn bg-ink-200/70 text-ink-800 hover:bg-ink-200 disabled:opacity-50;
+}
+.btn-ghost {
+  @apply btn text-ink-700 hover:bg-ink-200/60;
+}
+
+.chip {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.label {
+  @apply text-[11px] uppercase tracking-[0.14em] text-ink-500 font-medium font-sans;
+}
+
+input,
+textarea,
+select {
+  @apply font-sans;
+}
+
+a {
+  @apply underline-offset-2;
+}
+
+/* Hide scrollbar utility */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
