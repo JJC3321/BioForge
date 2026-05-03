@@ -52,6 +52,7 @@ def _bad_plan_no_negative_control() -> ExperimentPlan:
 
 
 async def test_orchestrator_skips_when_no_live_llm(monkeypatch: Any):
+    monkeypatch.setenv("AG2_API_KEY", "")
     monkeypatch.setenv("GEMINI_API_KEY", "")
     try:
         await orchestrator.run(
@@ -66,7 +67,7 @@ async def test_orchestrator_skips_when_no_live_llm(monkeypatch: Any):
 
 
 async def test_orchestrator_completes_when_design_passes(monkeypatch: Any):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("AG2_API_KEY", "test-key")
 
     monkeypatch.setattr(orchestrator.designer_mod, "make_designer", lambda: object())
     monkeypatch.setattr(orchestrator.rectifier_mod, "make_rectifier", lambda: object())
@@ -88,7 +89,7 @@ async def test_orchestrator_completes_when_design_passes(monkeypatch: Any):
 
 
 async def test_orchestrator_rectifies_then_passes(monkeypatch: Any):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("AG2_API_KEY", "test-key")
 
     monkeypatch.setattr(orchestrator.designer_mod, "make_designer", lambda: object())
     monkeypatch.setattr(orchestrator.rectifier_mod, "make_rectifier", lambda: object())
@@ -115,7 +116,7 @@ async def test_orchestrator_rectifies_then_passes(monkeypatch: Any):
 
 
 async def test_orchestrator_caps_iterations(monkeypatch: Any):
-    monkeypatch.setenv("GEMINI_API_KEY", "test-key")
+    monkeypatch.setenv("AG2_API_KEY", "test-key")
 
     monkeypatch.setattr(orchestrator.designer_mod, "make_designer", lambda: object())
     monkeypatch.setattr(orchestrator.rectifier_mod, "make_rectifier", lambda: object())

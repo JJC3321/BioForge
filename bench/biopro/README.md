@@ -10,7 +10,7 @@ Scores `generatePlan` against the **GEN** (protocol generation) split of
 npm install                                      # one-time, picks up tsx dep
 npm run bench:biopro -- --n=5                    # smoke test (stub mode, 5 records)
 npm run bench:biopro -- --n=50                   # 50-record stub run
-GEMINI_API_KEY=... npm run bench:biopro -- --n=50 --live
+AG2_API_KEY=... npm run bench:biopro -- --n=50 --live
 ```
 
 The first run downloads `GEN_test.json` (772 records) directly from the
@@ -25,7 +25,7 @@ schemas, which makes the server's auto-conversion fail.)
 | Flag | Default | Meaning |
 |---|---|---|
 | `--n=<int>` | `50` | Number of GEN test records (max 772 in the test split) |
-| `--live` | off | Use Gemini via `generatePlan` live path; requires `GEMINI_API_KEY`. Without the key, falls back to stub. |
+| `--live` | off | Use Gemini via `generatePlan` live path; requires `AG2_API_KEY`. Without the key, falls back to stub. |
 | `--use-official=<path>` | off | After local scoring, write a JSONL and shell out to `python Metrics/GEN.py` from a cloned `bioprotocolbench` for authoritative scores. |
 | `--out=<file>` | timestamped | Override the results JSON path |
 

@@ -4,7 +4,7 @@ BioForge is an AI-assisted experiment design tool. A researcher types a scientif
 
 ## Agent Architecture
 
-The plan generation backend is a three-agent [AG2](https://ag2.ai) pipeline running as a stateless Python sidecar. The **Designer** drafts the full `ExperimentPlan` from the hypothesis and QC result; the **Verifier** checks it against domain constraints (temperature ranges, timing, budget, physical plausibility) and produces typed `Violation` objects; the **Rectifier** receives both the draft and violations and emits a corrected final plan. All agents use Gemini 2.5 Flash with `response_format=PydanticModel` for structured output, and the Node API route Zod-re-parses the wire response for double validation. When `GEMINI_API_KEY` is unset, a Python stub serves the endpoint deterministically; when the sidecar is unreachable, a TypeScript stub takes over so the UI stays functional without any Python process.
+The plan generation backend is a three-agent [AG2](https://ag2.ai) pipeline running as a stateless Python sidecar. The **Designer** drafts the full `ExperimentPlan` from the hypothesis and QC result; the **Verifier** checks it against domain constraints (temperature ranges, timing, budget, physical plausibility) and produces typed `Violation` objects; the **Rectifier** receives both the draft and violations and emits a corrected final plan. All agents use Gemini 2.5 Flash with `response_format=PydanticModel` for structured output, and the Node API route Zod-re-parses the wire response for double validation. When `AG2_API_KEY` is unset, a Python stub serves the endpoint deterministically; when the sidecar is unreachable, a TypeScript stub takes over so the UI stays functional without any Python process.
 
 ## Getting Started
 
@@ -24,7 +24,7 @@ pip install -e ./agents[dev]
 
 # Configure environment
 cp .env.example .env
-# Add your GEMINI_API_KEY to .env
+# Add your AG2_API_KEY to .env
 ```
 
 ### Running

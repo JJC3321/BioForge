@@ -3,7 +3,7 @@ import { generatePlan } from "../src/lib/plan";
 import { renderPlanAsProtocolText, splitReferenceSteps } from "../bench/biopro/render";
 
 describe("bench/biopro/render", () => {
-  process.env.GEMINI_API_KEY = "";
+  process.env.AG2_API_KEY = "";
 
   it("renders a stub plan as numbered protocol lines starting at 1", async () => {
     const plan = await generatePlan({

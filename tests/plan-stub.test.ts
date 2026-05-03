@@ -4,8 +4,8 @@ import { ExperimentPlan } from "../src/lib/schema";
 
 describe("plan generation (stub mode)", () => {
   // Force stub mode
-  const prev = process.env.GEMINI_API_KEY;
-  process.env.GEMINI_API_KEY = "";
+  const prev = process.env.AG2_API_KEY;
+  process.env.AG2_API_KEY = "";
 
   it("produces a schema-valid plan for a knockdown/cisplatin hypothesis", async () => {
     const plan = await generatePlan({
@@ -44,5 +44,5 @@ describe("plan generation (stub mode)", () => {
   });
 
   // restore
-  if (prev !== undefined) process.env.GEMINI_API_KEY = prev;
+  if (prev !== undefined) process.env.AG2_API_KEY = prev;
 });

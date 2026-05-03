@@ -11,7 +11,7 @@ from typing import Any, Optional
 
 from autogen.beta.config import OpenAIConfig  # type: ignore[import-untyped]
 
-DEFAULT_MODEL = "gemini-3.1-pro-preview"
+DEFAULT_MODEL = "google/gemini-3.1-pro-preview"
 
 
 def gemini_api_key() -> Optional[str]:

@@ -2,19 +2,25 @@ import { GoogleGenAI, type FunctionDeclaration } from "@google/genai";
 
 export const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
 
+// AG2_API_KEY takes precedence, with fallback to GEMINI_API_KEY for backward compatibility
+function getApiKey(): string | undefined {
+  return process.env.AG2_API_KEY || process.env.GEMINI_API_KEY;
+}
+
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 let _client: GoogleGenAI | null = null;
 
 export function getGemini(): GoogleGenAI | null {
-  if (!process.env.GEMINI_API_KEY) return null;
+  const apiKey = getApiKey();
+  if (!apiKey) return null;
   if (_client) return _client;
-  _client = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+  _client = new GoogleGenAI({ apiKey });
   return _client;
 }
 
 export function isLiveLLM(): boolean {
-  return !!process.env.GEMINI_API_KEY;
+  return !!getApiKey();
 }
 
 interface StructuredCallOpts {
@@ -28,7 +34,7 @@ interface StructuredCallOpts {
 
 async function _structuredCallOnce<T>(opts: StructuredCallOpts): Promise<T> {
   const client = getGemini();
-  if (!client) throw new Error("Gemini client unavailable (no GEMINI_API_KEY)");
+  if (!client) throw new Error("Gemini client unavailable (no AG2_API_KEY or GEMINI_API_KEY)");
 
   const functionDeclaration: FunctionDeclaration = {
     name: opts.toolName,

@@ -44,7 +44,7 @@ function parseArgs(argv: string[]): CliOpts {
         [
           "Usage: npm run bench:biopro -- [flags]",
           "  --n=<int>                number of GEN test records (default 50, max 772 in test split)",
-          "  --live                   use Gemini (requires GEMINI_API_KEY); default is stub",
+          "  --live                   use Gemini (requires AG2_API_KEY); default is stub",
           "  --with-qc                run full pipeline with QC and database storage",
           "  --use-official=<path>    also run official Metrics/GEN.py from a cloned bioprotocolbench",
           "  --out=<file>             override results JSON path",
@@ -89,7 +89,7 @@ async function main() {
   const opts = parseArgs(process.argv);
   const liveAvailable = isLiveLLM();
   if (opts.live && !liveAvailable) {
-    console.warn("--live was passed but GEMINI_API_KEY is not set; the underlying generatePlan will fall back to the stub.");
+    console.warn("--live was passed but AG2_API_KEY is not set; the underlying generatePlan will fall back to the stub.");
   }
   const mode = opts.live && liveAvailable ? (opts.withQC ? "live+qc" : "live") : "stub";
 

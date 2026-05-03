@@ -35,10 +35,10 @@ Three load-bearing design rules to preserve when modifying this code:
 ### 1. Stub fallback is not optional — and it lives in two places
 
 Every LLM call has a deterministic, domain-aware stub:
-- **Python side** (`agents/app/stub.py`) serves the `/plan` endpoint when `GEMINI_API_KEY` is unset, so the sidecar still runs key-less.
+- **Python side** (`agents/app/stub.py`) serves the `/plan` endpoint when `AG2_API_KEY` is unset, so the sidecar still runs key-less.
 - **TypeScript side** (`stubPlan` in `lib/plan.ts`, no-LLM branch in `lib/qc.ts`) serves when the Python sidecar is unreachable (e.g., user only ran `npm run dev`, not `npm run dev:full`).
 
-Both stubs must stay in sync — port any template change to both. The app must run end-to-end with no `GEMINI_API_KEY` AND with no Python service.
+Both stubs must stay in sync — port any template change to both. The app must run end-to-end with no `AG2_API_KEY` AND with no Python service.
 
 ### 2. Two-layer validation around structured output
 
