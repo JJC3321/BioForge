@@ -1,7 +1,50 @@
 # BioForge
 
-BioForge is an AI-assisted experiment design tool: a researcher types a scientific hypothesis, the app runs a literature QC pass (novelty classification against a corpus, with up to 5 grounded references), and then generates a full experiment plan — structured hypothesis, step-by-step protocol, materials list, controls, risks, timeline, and budget. Reviewer feedback is persisted and fed back as few-shot examples on future similar hypotheses, so the system improves with use.
+BioForge is an AI-assisted experiment design tool. A researcher types a scientific hypothesis, the app runs a literature QC pass (novelty classification against a corpus, with up to 5 grounded references), and then generates a full experiment plan—structured hypothesis, step-by-step protocol, materials list, controls, risks, timeline, and budget. Reviewer feedback is persisted and fed back as few-shot examples on future similar hypotheses, so the system improves with use.
 
-The plan generation backend is a three-agent [AG2](https://ag2.ai) pipeline running as a stateless Python sidecar (`uvicorn` on `:8001`). All three agents are `ConversableAgent` instances backed by Gemini 2.5 Flash with `response_format=PydanticModel` for structured output: the **Designer** drafts the full `ExperimentPlan` from the hypothesis, QC result, and any prior reviewer corrections injected into its system prompt; the **Verifier** checks the draft against domain constraints (temperature ranges, timing, budget, physical plausibility) and produces a `VerificationResult` with typed `Violation` objects; the **Rectifier** receives both the draft and the violations and emits a corrected final plan. The Node API route (`/api/plan`) Zod-re-parses the wire response, so structured output is validated twice. When `GEMINI_API_KEY` is unset, `agents/app/stub.py` serves the endpoint deterministically so the sidecar runs key-less; when the sidecar is unreachable entirely, a TypeScript stub in `lib/plan.ts` takes over, keeping the UI fully functional with no Python process at all.
+## Agent Architecture
 
-To run: install Node deps with `npm install`, install Python deps with `pip install -e ./agents[dev]`, copy `.env.example` to `.env` and add your `GEMINI_API_KEY`, then start both processes with `npm run dev:full` (or `npm run dev` alone for the TS-stub-only path). Tests: `npm test` for the TypeScript suite and `cd agents && pytest` for the Python sidecar tests covering stub parity, verifier rules, and the Designer→Verifier→Rectifier FSM.
+The plan generation backend is a three-agent [AG2](https://ag2.ai) pipeline running as a stateless Python sidecar. The **Designer** drafts the full `ExperimentPlan` from the hypothesis and QC result; the **Verifier** checks it against domain constraints (temperature ranges, timing, budget, physical plausibility) and produces typed `Violation` objects; the **Rectifier** receives both the draft and violations and emits a corrected final plan. All agents use Gemini 2.5 Flash with `response_format=PydanticModel` for structured output, and the Node API route Zod-re-parses the wire response for double validation. When `GEMINI_API_KEY` is unset, a Python stub serves the endpoint deterministically; when the sidecar is unreachable, a TypeScript stub takes over so the UI stays functional without any Python process.
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js
+- Python 3.x
+
+### Installation
+
+```bash
+# Install Node dependencies
+npm install
+
+# Install Python dependencies
+pip install -e ./agents[dev]
+
+# Configure environment
+cp .env.example .env
+# Add your GEMINI_API_KEY to .env
+```
+
+### Running
+
+```bash
+# Start both Node and Python processes
+npm run dev:full
+
+# Or run Node only (TypeScript stub mode)
+npm run dev
+```
+
+### Testing
+
+```bash
+# TypeScript tests
+npm test
+
+# Python sidecar tests
+cd agents && pytest
+```
+
+Tests cover stub parity, verifier rules, and the Designer→Verifier→Rectifier FSM.
