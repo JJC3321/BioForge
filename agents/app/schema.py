@@ -136,3 +136,43 @@ class PlanResponse(_Strict):
     verification: Optional[VerificationResult] = None
     iterations: int = 0
     source: Literal["agents", "stub"] = "stub"
+
+
+ExperimentType = Literal["pcr", "cell_culture", "western_blot", "generic"]
+
+
+class StepOutcome(_Strict):
+    stepIndex: int
+    title: str
+    successProbability: float = Field(ge=0.0, le=1.0)
+    predictedYield: Optional[str] = None
+    riskFlags: List[str] = Field(default_factory=list)
+
+
+class StepwiseSimulation(_Strict):
+    experimentType: ExperimentType
+    stepOutcomes: List[StepOutcome]
+    notes: Optional[str] = None
+
+
+class SimulationResult(_Strict):
+    experimentType: ExperimentType
+    overallSuccessProbability: float = Field(ge=0.0, le=1.0)
+    confidenceScore: float = Field(ge=0.0, le=1.0)
+    stepOutcomes: List[StepOutcome]
+    criticalRisks: List[str] = Field(default_factory=list)
+    recommendations: List[str] = Field(default_factory=list)
+    optimisticScenario: str
+    pessimisticScenario: str
+    reportMarkdown: Optional[str] = None
+
+
+class SimRequest(_Strict):
+    plan: ExperimentPlan
+    hypothesis: str = Field(min_length=8)
+    nRuns: int = Field(default=100, ge=10, le=1000)
+
+
+class SimResponse(_Strict):
+    result: SimulationResult
+    source: Literal["agents", "stub"] = "stub"

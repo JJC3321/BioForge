@@ -156,3 +156,26 @@ export const VerificationResult = z.object({
   physicalComplianceScore: z.number().min(0).max(1),
 });
 export type VerificationResult = z.infer<typeof VerificationResult>;
+
+// Dry-Run Simulator schemas (mirrors agents/app/schema.py)
+export const StepOutcome = z.object({
+  stepIndex: z.number().int(),
+  title: z.string(),
+  successProbability: z.number().min(0).max(1),
+  predictedYield: z.string().nullish(),
+  riskFlags: z.array(z.string()).default([]),
+});
+export type StepOutcome = z.infer<typeof StepOutcome>;
+
+export const SimulationResult = z.object({
+  experimentType: z.enum(["pcr", "cell_culture", "western_blot", "generic"]),
+  overallSuccessProbability: z.number().min(0).max(1),
+  confidenceScore: z.number().min(0).max(1),
+  stepOutcomes: z.array(StepOutcome),
+  criticalRisks: z.array(z.string()).default([]),
+  recommendations: z.array(z.string()).default([]),
+  optimisticScenario: z.string(),
+  pessimisticScenario: z.string(),
+  reportMarkdown: z.string().nullish(),
+});
+export type SimulationResult = z.infer<typeof SimulationResult>;

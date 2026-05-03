@@ -46,11 +46,11 @@ export function saveFeedback(payload: FeedbackPayload): StoredFeedback {
     id,
     planId: payload.planId,
     hypothesis: payload.hypothesis,
-    domain: payload.domain,
+    domain: payload.domain ?? undefined,
     tags: payload.tags,
-    ratings: payload.ratings,
-    corrections: payload.corrections,
-    freeformNotes: payload.freeformNotes,
+    ratings: payload.ratings.map((r) => ({ ...r, comment: r.comment ?? undefined })),
+    corrections: payload.corrections.map((c) => ({ ...c, reason: c.reason ?? undefined })),
+    freeformNotes: payload.freeformNotes ?? undefined,
     createdAt,
   };
   mutateDb((db) => {

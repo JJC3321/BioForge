@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import type { ExperimentPlan } from "@/lib/schema";
+import { DrySimPanel } from "./DrySimPanel";
 
-type Tab = "summary" | "protocol" | "materials" | "controls" | "budget" | "timeline" | "risks";
+type Tab = "summary" | "protocol" | "materials" | "controls" | "budget" | "timeline" | "risks" | "dry-run";
 const TABS: { id: Tab; label: string }[] = [
   { id: "summary", label: "Summary" },
   { id: "protocol", label: "Protocol" },
@@ -12,6 +13,7 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "budget", label: "Budget" },
   { id: "timeline", label: "Timeline" },
   { id: "risks", label: "Risks" },
+  { id: "dry-run", label: "Dry Run" },
 ];
 
 export function PlanView(props: {
@@ -87,6 +89,9 @@ export function PlanView(props: {
           {tab === "budget" && <BudgetTab plan={props.plan} />}
           {tab === "timeline" && <TimelineTab plan={props.plan} />}
           {tab === "risks" && <RisksTab plan={props.plan} />}
+          {tab === "dry-run" && (
+            <DrySimPanel plan={props.plan} hypothesis={props.hypothesis} />
+          )}
         </>
       )}
     </section>

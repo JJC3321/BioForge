@@ -16,9 +16,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import ValidationError
 
 from .agents import orchestrator
+from .agents import sim_agent
 from .config import is_live_llm
-from .schema import PlanRequest, PlanResponse
+from .schema import PlanRequest, PlanResponse, SimRequest, SimResponse
 from .stub import stub_plan
+from .stub_sim import stub_sim
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("plan-service")
@@ -79,3 +81,17 @@ async def plan(req: PlanRequest) -> PlanResponse:
         iterations=result.iterations,
         source="agents",
     )
+
+
+@app.post("/sim", response_model=SimResponse)
+async def sim(req: SimRequest) -> SimResponse:
+    if not is_live_llm():
+        log.info("sim: no AG2_API_KEY — serving stub")
+        return SimResponse(result=stub_sim(req.plan), source="stub")
+
+    try:
+        result = await sim_agent.run_sim(req.plan, req.nRuns)
+        return SimResponse(result=result, source="agents")
+    except Exception as e:  # noqa: BLE001
+        log.warning("sim: agent run failed, falling back to stub: %s", e)
+        return SimResponse(result=stub_sim(req.plan), source="stub")
